@@ -1,0 +1,21 @@
+{% extends "spaceXlaunchTracker/layout.html" %}
+
+{% block title %}Launches | SpaceX Launch Tracker{% endblock %}
+
+{% block content %}
+    <h1>SpaceX Launches</h1>
+    <ul>
+        {% for launch in launches %}
+            <li>
+                <strong>{{ launch.name }}</strong> - 
+                Date: {{ launch.date_utc }} - 
+                Success: {{ launch.success|yesno:"Yes,No" }}
+                <br>
+                <a href="{{ launch.links.webcast }}">Watch Launch</a>
+                <br>
+                <img src="{{ launch.links.patch.small }}" alt="Mission Patch">
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
