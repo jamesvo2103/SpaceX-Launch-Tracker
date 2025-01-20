@@ -12,8 +12,10 @@
                 Success: {{ launch.success|yesno:"Yes,No" }}
                 <br>
                 <a href="{{ launch.links.webcast }}">Watch Launch</a>
+                <a href="{% url 'launch_detail' launch.id %}"> Details</a>
                 <br>
                 <img src="{{ launch.links.patch.small }}" alt="Mission Patch">
+                
             </li>
         {% endfor %}
     </ul>

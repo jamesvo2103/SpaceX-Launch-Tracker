@@ -1,0 +1,88 @@
+{% extends "spaceXlaunchTracker/layout.html" %}
+
+{% block title %}Details | SpaceX Launch Tracker{% endblock %}
+
+{% block content %}
+<head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>{{ launch.name }} - Launch Details</title>
+      <style>
+          body {
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 0;
+              line-height: 1.6;
+              background: url("{{ launch.links.patch.large|default:'' }}") no-repeat center center fixed;
+              background-size: cover;
+              color: white;
+          }
+          .content {
+              background-color: rgba(0, 0, 0, 0.7);
+              padding: 20px;
+              margin: 20px;
+              border-radius: 10px;
+          }
+          h1, h2 {
+              color: #FFD700;
+          }
+          a {
+              color: #1E90FF;
+              text-decoration: none;
+          }
+          a:hover {
+              text-decoration: underline;
+          }
+      </style>
+  </head>
+  <body>
+      <div class="content">
+          <h1>{{ launch.name }}</h1>
+          <p><strong>Launch Date:</strong> {{ launch.date_utc|date:"F j, Y H:i:s" }} UTC</p>
+          <p><strong>Success:</strong> {{ launch.success|yesno:"Yes,No,Unknown" }}</p>
+          <p><strong>Details:</strong> {{ launch.details|default:"No details available for this launch." }}</p>
+  
+          <div class="section">
+              <h2>Rocket Details</h2>
+              <p><strong>Rocket Name:</strong> {{ rocket.name }}</p>
+              <p><strong>Type:</strong> {{ rocket.type }}</p>
+              <p><strong>Stages:</strong> {{ rocket.stages }}</p>
+              <p><strong>Boosters:</strong> {{ rocket.boosters }}</p>
+              <p><strong>First Flight:</strong> {{ rocket.first_flight }}</p>
+              <p><strong>Country:</strong> {{ rocket.country }}</p>
+              <p><strong>Company:</strong> {{ rocket.company }}</p>
+              <p><strong>Description:</strong> {{ rocket.description }}</p>
+          </div>
+  
+          <div class="section">
+              <h2>Payload Details</h2>
+              {% if payload %}
+                  <p><strong>Payload Name:</strong> {{ payload.name }}</p>
+                  <p><strong>Type:</strong> {{ payload.type }}</p>
+                  <p><strong>Orbit:</strong> {{ payload.orbit }}</p>
+                  <p><strong>Manufacturer:</strong> {{ payload.manufacturer|default:"Unknown" }}</p>
+                  <p><strong>Mass (kg):</strong> {{ payload.mass_kg|default:"Unknown" }}</p>
+                  <p><strong>Mass (lbs):</strong> {{ payload.mass_lbs|default:"Unknown" }}</p>
+                  <p><strong>Customers:</strong> {{ payload.customers|join:", " }}</p>
+              {% else %}
+                  <p>No payload data available for this launch.</p>
+              {% endif %}
+          </div>
+  
+          <div class="section">
+              <h2>Links</h2>
+              {% if launch.links.webcast %}
+                  <p><a href="{{ launch.links.webcast }}" target="_blank">Watch Webcast</a></p>
+              {% endif %}
+              {% if launch.links.article %}
+                  <p><a href="{{ launch.links.article }}" target="_blank">Read Article</a></p>
+              {% endif %}
+              {% if launch.links.wikipedia %}
+                  <p><a href="{{ launch.links.wikipedia }}" target="_blank">Wikipedia</a></p>
+              {% endif %}
+          </div>
+  
+          <a href="{% url 'launches' %}" style="color: #FFD700;">← Back to All Launches</a>
+      </div>
+  </body>
+{% endblock %}
