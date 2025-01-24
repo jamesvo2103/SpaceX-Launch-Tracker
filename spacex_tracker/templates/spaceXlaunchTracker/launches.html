@@ -3,21 +3,136 @@
 {% block title %}Launches | SpaceX Launch Tracker{% endblock %}
 
 {% block content %}
-    <h1>SpaceX Launches</h1>
-    <ul>
-        {% for launch in launches %}
-            <li>
-                <strong>{{ launch.name }}</strong> - 
-                Date: {{ launch.date_utc }} - 
-                Success: {{ launch.success|yesno:"Yes,No" }}
-                <br>
-                <a href="{{ launch.links.webcast }}">Watch Launch</a>
-                <a href="{% url 'launch_detail' launch.id %}"> Details</a>
-                <br>
-                <img src="{{ launch.links.patch.small }}" alt="Mission Patch">
-                
-            </li>
-        {% endfor %}
-    </ul>
-{% endblock %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
 
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 3em; /* Increased font size for the title */
+            color: #f4f4f4;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+        }
+
+        .launch-container {
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+        }
+
+        .launch-item {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100vh; /* Each item takes the full height of the viewport */
+            color: #fff;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .launch-item.fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .launch-item:nth-child(odd) {
+            flex-direction: row-reverse;
+            background-image: url('https://images.unsplash.com/photo-1465101162946-4377e57745c3?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .launch-item:nth-child(even) {
+            flex-direction: row;
+            background-image: url('https://hubblesite.org/files/live/sites/hubble/files/home/science/galaxies/_images/STScI-H-galaxies-1502a-2400x1200.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .launch-content {
+            width: 40%;
+            max-width: 600px;
+            margin: 0 5%; /* Adjusted for more extreme positioning */
+            padding: 30px; /* Increased padding for a more balanced layout */
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 8px;
+        }
+
+        .launch-content strong {
+            font-size: 3em; /* Increased font size for mission name */
+            color: #f4f4f4;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+        }
+
+        .launch-content p {
+            margin: 15px 0;
+            font-size: 1.5em; /* Increased font size for text */
+            color: #ddd;
+        }
+
+        .launch-content a {
+            text-decoration: none;
+            color: #1a73e8;
+            font-weight: bold;
+            font-size: 1.5em; /* Increased font size for links */
+        }
+
+        .launch-content a:hover {
+            text-decoration: underline;
+        }
+
+        .launch-item img {
+            width: 40%; /* Increased image size */
+            max-width: 350px; /* Increased max width for mission patch */
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7);
+        }
+    </style>
+
+    <h1>SpaceX Launches</h1>
+    <div class="launch-container">
+        {% for launch in launches %}
+            <div class="launch-item">
+                <img src="{{ launch.links.patch.small }}" alt="Mission Patch">
+                <div class="launch-content">
+                    <strong>{{ launch.name }}</strong>
+                    <p>Date: {{ launch.date_utc }}</p>
+                    <p>Success: {{ launch.success|yesno:"Yes,No" }}</p>
+                    <a href="{{ launch.links.webcast }}" target="_blank">Watch Launch</a> |
+                    <a href="{% url 'launch_detail' launch.id %}">Details</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const launchItems = document.querySelectorAll(".launch-item");
+
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add("fade-in");
+                        } else {
+                            entry.target.classList.remove("fade-in"); // Reset animation when leaving viewport
+                        }
+                    });
+                },
+                { threshold: 0.1 }
+            );
+
+            launchItems.forEach((item) => observer.observe(item));
+        });
+    </script>
+{% endblock %}

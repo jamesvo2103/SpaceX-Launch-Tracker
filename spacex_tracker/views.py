@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Launch, Rocket, Payload
 import requests
+from datetime import datetime
 # Create your views here.
 def index(request):
-      return render(request, "spaceXlaunchTracker/index.html")
+
+    return render(request, "spaceXlaunchTracker/index.html")
 
 def about(request):
       return render(request, "spaceXlaunchTracker/about.html")
